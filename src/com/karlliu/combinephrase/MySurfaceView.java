@@ -23,6 +23,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private Paint paintDropArea;
 	private Paint paintWordBlock;
 	private Paint paintText;
+	private Paint paintBackGround;
 
 	private Thread th;
 	private boolean flag;
@@ -61,7 +62,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 
 		// drop area paint
 		paintDropArea = new Paint();
-		paintDropArea.setColor(Color.WHITE);
+		paintDropArea.setColor(Color.YELLOW);
 		paintDropArea.setAntiAlias(true);
 
 		// paint word block
@@ -74,9 +75,14 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		paintText.setColor(Color.BLUE);
 		paintText.setAntiAlias(true);
 		paintText.setTextSize(textPaintSize);
+		
+		//paint background
+		paintBackGround = new Paint();
+		paintText.setColor(Color.WHITE);
+		paintText.setAntiAlias(true);
 
 		setFocusable(true);
-		mWB = new Phrase(1).getContent();
+		mWB = new Phrase(2).getContent();
 
 		fixedWB = new FixedWordBlock[mWB.length];
 		for (int i = 0; i < fixedWB.length; i++) {
@@ -107,17 +113,16 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		try {
 			canvas = sfh.lockCanvas();
 			if (canvas != null) {
-				canvas.drawColor(Color.BLACK);
-				// draw drop area white
-				drawDropArea();
+				canvas.drawColor(Color.BLACK);				
 
 				for (int i = 0; i < mWB.length; i++) {
 					paintWordBlock.setColor(selectColor(mWB[i]));
 					canvas.drawRect(mWB[i].getBlockLeft(), mWB[i].getBlockTop(), mWB[i].getBlockRight(), mWB[i].getBlockBottom(), paintWordBlock);
 					canvas.drawText(mWB[i].getContent(), mWB[i].getBlockLeft() + textShiftX, mWB[i].getBlockTop() + textShiftY, paintText);
 				}
-
-				// draw initial word block
+				
+				//draw clippers
+				drawDropArea();
 
 			}
 		} catch (Exception e) {
@@ -138,6 +143,15 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			for (int i = 0; i < mWB.length; i++) {
 				if (judgeTouched(mWB[i], event.getX(), event.getY())) {
 					mWB[i].setTouched(true);
+					
+					// if mWB is already set in fixedWB
+					if (mWB[i].getOccupied() != -1) 
+					{
+						//lock is released
+						fixedWB[mWB[i].getOccupied()].setOccupied(-1);  // fixedWB is not occupied by any mWB
+						mWB[i].setOccupied(-1); //mWB is not set in any fixedWB						
+					}
+
 					Log.i("phrase", "down " + i + " selected");
 					break;
 				}
@@ -154,8 +168,17 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 					boolean movedInDropBox = false;
 					// release the finger and judge if the destination is within the fixedWB
 					for (int j = 0; j < fixedWB.length; j++) {
-						if (judgeTouched(fixedWB[j], event.getX(), event.getY())) {
-							updateWordBlock(mWB[i], fixedWB[j].getBlockLeft(), fixedWB[j].getBlockTop());
+						// touch point within fixed block or four points of moving block within fixed block
+						if ( (fixedWB[j].getOccupied() == -1) && (judgeTouched(fixedWB[j], event.getX(), event.getY()) || 
+							 judgeTouched(fixedWB[j], mWB[i].getBlockLeft(), mWB[i].getBlockTop()) || 
+							  judgeTouched(fixedWB[j], mWB[i].getBlockLeft(), mWB[i].getBlockBottom())  ||
+							   judgeTouched(fixedWB[j], mWB[i].getBlockRight(), mWB[i].getBlockTop()) ||
+							    judgeTouched(fixedWB[j], mWB[i].getBlockRight(), mWB[i].getBlockBottom()))) {
+							
+							updateWordBlock(mWB[i], fixedWB[j].getBlockLeft(), fixedWB[j].getBlockTop());							
+							fixedWB[j].setOccupied(i);  // fixedWB[j] is occupied by mWB[i]
+							mWB[i].setOccupied(j);	// mWB[i] is set in fixedWB[j]
+							
 							movedInDropBox = true;
 							Log.i("phrase", "dropped in " + j + " drop box");
 							break;
@@ -223,12 +246,20 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	}
 
 	/**
-	 * Draw drop area
+	 * Draw drop area clippers
+	 * Actually the fixed word block can be invisible
 	 */
 	public void drawDropArea() {
+//		for (int i = 0; i < fixedWB.length; i++) {
+//			canvas.drawRect(fixedWB[i].getBlockLeft(), fixedWB[i].getBlockTop(), fixedWB[i].getBlockRight(), fixedWB[i].getBlockBottom(),
+//					paintDropArea);
+//		}
+		float clipperXShift = 10;
+		float clipperYShift = 5;
 		for (int i = 0; i < fixedWB.length; i++) {
-			canvas.drawRect(fixedWB[i].getBlockLeft(), fixedWB[i].getBlockTop(), fixedWB[i].getBlockRight(), fixedWB[i].getBlockBottom(),
-					paintDropArea);
+			Clipper aClipper = new Clipper(fixedWB[i].getBlockLeft() + clipperXShift, fixedWB[i].getBlockTop() - clipperYShift);
+			canvas.drawPath(aClipper.getClipper(),paintDropArea);
+			canvas.drawCircle(aClipper.getHoleX(), aClipper.getHoleY(), aClipper.getRadius(), paintBackGround);
 		}
 	}
 
@@ -254,7 +285,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			return true;
 		return false;
 	}
-
+	
 	// initialized word blocks
 	public void initializeRandomBlocks() {
 		// Y start from 600, X starts from 0
