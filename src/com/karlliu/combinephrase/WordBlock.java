@@ -1,17 +1,12 @@
 package com.karlliu.combinephrase;
 
-import java.math.*;
-import java.util.*;
+import java.util.Random;
 
-public class WordBlock {
+public class WordBlock extends FixedWordBlock {
 	private String content;
 	private int index;
 	private float randomX;
 	private float randomY;
-	private float blockLeft;
-	private float blockTop;
-	private float blockRight;
-	private float blockBottom;
 	private boolean touched;
 	
 	public WordBlock() {
@@ -55,37 +50,11 @@ public class WordBlock {
 		randomY = r.nextFloat();
 	}
 	
-	public void setBlockLeft(float aBlockLeft) {
-		blockLeft = aBlockLeft;
-	}
-	public void setBlockTop(float aBlockTop) {
-		blockTop = aBlockTop;
-	}	
-	public void setBlockRight(float aBlockRight) {
-		blockRight = aBlockRight;
-	}
-	public void setBlockBottom(float aBlockBottom) {
-		blockBottom = aBlockBottom;
-	}
-	
-	public float getBlockLeft() {
-		return blockLeft;
-	}
-	public float getBlockTop() {
-		return blockTop;
-	}	
-	public float getBlockRight() {
-		return blockRight;
-	}
-	public float getBlockBottom() {
-		return blockBottom;
-	}	
-	
 	public void setTouched(boolean aTouched) {
 		touched = aTouched;
 	}
 	
 	public boolean getTouched() {
 		return touched;
-	}	
+	}
 }

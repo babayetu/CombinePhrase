@@ -1,18 +1,15 @@
 package com.karlliu.combinephrase;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Region;
-import android.graphics.Region.Op;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
 
 /**
  * 
@@ -21,29 +18,38 @@ import android.view.SurfaceHolder.Callback;
  */
 public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private SurfaceHolder sfh;
+
+	// different paint pen
 	private Paint paintDropArea;
 	private Paint paintWordBlock;
 	private Paint paintText;
+
 	private Thread th;
 	private boolean flag;
 	private Canvas canvas;
 	private int screenW, screenH;
-	// define collision region
-	private Rect dropRect;
-	private Region dropRegion;
-	private final int putBoxHalfHeight = 200; // drop area half Height
 	private WordBlock[] mWB;
-	private Region[] mRegion;
-	private boolean initialized = false;	
+	private FixedWordBlock[] fixedWB;
+	private boolean initialized = false;
+	private int dropBoxColumns = 8; // 8 columns one line
 
-	//constant
+	// constant
 	private final int randomBlockPlaceY = 600;
 	private final int textPaintSize = 40;
 	private final int charLengthX = 20;
 	private final int charHeightY = 50;
+	private final int xBlockPadding = 20;
 	private final float textShiftX = 5.0f;
 	private final float textShiftY = textPaintSize;
 	private final float statusBarHeightY = 100.0f;
+
+	// constant drop area
+	private final float lineSpace = 20.0f;
+	private final float columnSpace = 10.0f;
+	private final float dropAreaLeft = 100.0f;
+	private final float dropAreaTop = 10.0f;
+	private final float dropBoxWidth = charLengthX * 10.0f;
+	private final float dropBoxHeight = charHeightY;
 
 	/**
 	 * SurfaceView constructor
@@ -52,26 +58,30 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		super(context);
 		sfh = this.getHolder();
 		sfh.addCallback(this);
-		
-		//drop area paint
+
+		// drop area paint
 		paintDropArea = new Paint();
 		paintDropArea.setColor(Color.WHITE);
 		paintDropArea.setAntiAlias(true);
-		
-		//paint word block
+
+		// paint word block
 		paintWordBlock = new Paint();
 		paintWordBlock.setColor(Color.GRAY);
 		paintWordBlock.setAntiAlias(true);
-		
-		//paint the text
+
+		// paint the text
 		paintText = new Paint();
 		paintText.setColor(Color.BLUE);
 		paintText.setAntiAlias(true);
 		paintText.setTextSize(textPaintSize);
-		
+
 		setFocusable(true);
 		mWB = new Phrase(1).getContent();
-		mRegion = new Region[mWB.length];
+
+		fixedWB = new FixedWordBlock[mWB.length];
+		for (int i = 0; i < fixedWB.length; i++) {
+			fixedWB[i] = new FixedWordBlock();
+		}
 	}
 
 	/**
@@ -81,7 +91,6 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	public void surfaceCreated(SurfaceHolder holder) {
 		screenW = this.getWidth();
 		screenH = this.getHeight();
-		drawDropRect();
 		initializeRandomBlocks();
 		flag = true;
 		// initialize the thread
@@ -99,11 +108,12 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			if (canvas != null) {
 				canvas.drawColor(Color.BLACK);
 				// draw drop area white
-				canvas.drawRect(dropRect, paintDropArea);
+				drawDropArea();
+
 				for (int i = 0; i < mWB.length; i++) {
 					paintWordBlock.setColor(selectColor(mWB[i]));
 					canvas.drawRect(mWB[i].getBlockLeft(), mWB[i].getBlockTop(), mWB[i].getBlockRight(), mWB[i].getBlockBottom(), paintWordBlock);
-					canvas.drawText(mWB[i].getContent(), mWB[i].getBlockLeft() + textShiftX, mWB[i].getBlockTop() + textShiftY, paintText);					
+					canvas.drawText(mWB[i].getContent(), mWB[i].getBlockLeft() + textShiftX, mWB[i].getBlockTop() + textShiftY, paintText);
 				}
 
 				// draw initial word block
@@ -124,33 +134,44 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	public boolean onTouchEvent(MotionEvent event) {
 		// judge which word block is touched
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			for (int i=0; i<mRegion.length;i++) {
-				if (mRegion[i].contains((int) event.getX(), (int) event.getY()))
-				{
+			for (int i = 0; i < mWB.length; i++) {
+				if (judgeTouched(mWB[i], event.getX(), event.getY())) {
 					mWB[i].setTouched(true);
+					Log.i("phrase", "down " + i + " selected");
 					break;
 				}
-			}			
+			}
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			for (int i=0; i< mRegion.length;i++) {
+			for (int i = 0; i < mWB.length; i++) {
 				if (mWB[i].getTouched()) {
-					mWB[i].setBlockLeft(event.getX());
-					mWB[i].setBlockTop(event.getY());
-					mWB[i].setBlockRight(event.getX() + mWB[i].getContent().length() * charLengthX);
-					mWB[i].setBlockBottom(event.getY() + charHeightY);					
+					updateWordBlock(mWB[i], event.getX(), event.getY());
 				}
 			}
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			for (int i=0; i< mRegion.length;i++) {
+			for (int i = 0; i < mWB.length; i++) {
 				if (mWB[i].getTouched()) {
-					mWB[i].setBlockLeft(event.getX());
-					mWB[i].setBlockTop(event.getY());
-					mWB[i].setBlockRight(event.getX() + mWB[i].getContent().length() * charLengthX);
-					mWB[i].setBlockBottom(event.getY() + charHeightY);					
+					boolean movedInDropBox = false;
+					// release the finger and judge if the destination is within the fixedWB
+					for (int j = 0; j < fixedWB.length; j++) {
+						if (judgeTouched(fixedWB[j], event.getX(), event.getY())) {
+							updateWordBlock(mWB[i], fixedWB[j].getBlockLeft(), fixedWB[j].getBlockTop());
+							movedInDropBox = true;
+							Log.i("phrase", "dropped in " + j + " drop box");
+							break;
+						}
+					}
+
+					// not moved in drop box
+					if (!movedInDropBox)
+						updateWordBlock(mWB[i], event.getX(), event.getY());
+
+					mWB[i].setTouched(false);
+					Log.i("phrase", "up " + i + " changed");
+
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -200,27 +221,59 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		flag = false;
 	}
 
-	public void drawDropRect() {
-			dropRect = new Rect(0, 0, screenW, 300);
-			dropRegion = new Region(dropRect);
+	/**
+	 * Draw drop area
+	 */
+	public void drawDropArea() {
+		float[] pts = new float[8];
+		for (int i = 0; i < fixedWB.length; i++) {		
+			canvas.drawRect(fixedWB[i].getBlockLeft(), fixedWB[i].getBlockTop(), fixedWB[i].getBlockRight(), 
+					        fixedWB[i].getBlockBottom(), paintDropArea);
+		}
 	}
 
+	/**
+	 * return word block color randomly
+	 */
 	private int selectColor(WordBlock wb) {
 		// background and foreground
 		return Color.GRAY;
 	}
 
-	// draw initialized word blocks
+	// change word block position
+	private void updateWordBlock(WordBlock aWb, float x, float y) {
+		aWb.setBlockLeft(x);
+		aWb.setBlockTop(y);
+		aWb.setBlockRight(x + aWb.getContent().length() * charLengthX + xBlockPadding);
+		aWb.setBlockBottom(y + charHeightY);
+	}
+
+	// judge word block is touched
+	private boolean judgeTouched(FixedWordBlock aWB, float x, float y) {
+		if (aWB.getBlockLeft() < x && x < aWB.getBlockRight() && aWB.getBlockTop() < y && y < aWB.getBlockBottom())
+			return true;
+		return false;
+	}
+
+	// initialized word blocks
 	public void initializeRandomBlocks() {
 		// Y start from 600, X starts from 0
 		if (initialized)
 			return;
 		for (int i = 0; i < mWB.length; i++) {
-			mWB[i].setBlockLeft(mWB[i].getRamdonX() * screenW);
-			mWB[i].setBlockTop(mWB[i].getRamdonY() * (screenH - randomBlockPlaceY) + randomBlockPlaceY - statusBarHeightY);
-			mWB[i].setBlockRight(mWB[i].getBlockLeft() + mWB[i].getContent().length() * charLengthX);
-			mWB[i].setBlockBottom(mWB[i].getBlockTop() + charHeightY);
-			mRegion[i] = new Region(new Rect((int)mWB[i].getBlockLeft(), (int)mWB[i].getBlockTop(), (int)mWB[i].getBlockRight(), (int)mWB[i].getBlockBottom()));
+			updateWordBlock(mWB[i], mWB[i].getRamdonX() * screenW, mWB[i].getRamdonY() * (screenH - randomBlockPlaceY) + randomBlockPlaceY
+					- statusBarHeightY);
+		}
+
+		// initialize drop area box
+		for (int i = 0; i < fixedWB.length; i++) {
+			int row = i / dropBoxColumns; // word block in which line and column
+			int col = i % dropBoxColumns;
+
+			fixedWB[i].setBlockLeft(dropAreaLeft + col * dropBoxWidth + col * columnSpace);
+			fixedWB[i].setBlockTop(dropAreaTop + row * dropBoxHeight + row * lineSpace);
+			fixedWB[i].setBlockRight(fixedWB[i].getBlockLeft() + dropBoxWidth);
+			fixedWB[i].setBlockBottom(fixedWB[i].getBlockTop() + dropBoxHeight);
 		}
 
 		initialized = true;
