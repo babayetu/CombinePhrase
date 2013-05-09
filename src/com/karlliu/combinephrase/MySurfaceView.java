@@ -31,22 +31,22 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private WordBlock[] mWB;
 	private FixedWordBlock[] fixedWB;
 	private boolean initialized = false;
-	private int dropBoxColumns = 8; // 8 columns one line
+	private int dropBoxColumns = 4; // columns one line
 
 	// constant
-	private final int randomBlockPlaceY = 600;
+	private final int randomBlockPlaceY = 200;	//random word block initial Y position - below the Y lines
 	private final int textPaintSize = 40;
 	private final int charLengthX = 20;
 	private final int charHeightY = 50;
-	private final int xBlockPadding = 20;
+	private final int xBlockPadding = 20;		//word block x need to be longer to hold all chars
 	private final float textShiftX = 5.0f;
 	private final float textShiftY = textPaintSize;
-	private final float statusBarHeightY = 100.0f;
+	private final float statusBarHeightY = charHeightY;
 
 	// constant drop area
 	private final float lineSpace = 20.0f;
 	private final float columnSpace = 10.0f;
-	private final float dropAreaLeft = 100.0f;
+	private final float dropAreaLeft = 10.0f;
 	private final float dropAreaTop = 10.0f;
 	private final float dropBoxWidth = charLengthX * 10.0f;
 	private final float dropBoxHeight = charHeightY;
@@ -89,8 +89,9 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	 */
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		screenW = this.getWidth();
+		screenW = this.getWidth();   //landscape width=854 height=480
 		screenH = this.getHeight();
+		//Log.i("phrase", "width=" + screenW + " height=" + screenH);
 		initializeRandomBlocks();
 		flag = true;
 		// initialize the thread
@@ -225,10 +226,9 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	 * Draw drop area
 	 */
 	public void drawDropArea() {
-		float[] pts = new float[8];
-		for (int i = 0; i < fixedWB.length; i++) {		
-			canvas.drawRect(fixedWB[i].getBlockLeft(), fixedWB[i].getBlockTop(), fixedWB[i].getBlockRight(), 
-					        fixedWB[i].getBlockBottom(), paintDropArea);
+		for (int i = 0; i < fixedWB.length; i++) {
+			canvas.drawRect(fixedWB[i].getBlockLeft(), fixedWB[i].getBlockTop(), fixedWB[i].getBlockRight(), fixedWB[i].getBlockBottom(),
+					paintDropArea);
 		}
 	}
 
