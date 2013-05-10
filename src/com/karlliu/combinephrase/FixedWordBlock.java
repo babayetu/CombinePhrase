@@ -5,6 +5,7 @@ public class FixedWordBlock {
 	protected float blockTop;
 	protected float blockRight;
 	protected float blockBottom;
+  
 	// -1= not occupied
 	// fixedWB.occupied = movingWB index
 	// movingWB.occupied = fixedWB index
@@ -46,4 +47,7 @@ public class FixedWordBlock {
 	public void setOccupied(int aOccupied) {
 		occupied = aOccupied;
 	}
+	
+	
+	
 }
