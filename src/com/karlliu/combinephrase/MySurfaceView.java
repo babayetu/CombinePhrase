@@ -31,6 +31,9 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private Paint paintWin;
 
 	private final int COLOR_OLIVER = 0xffcc9933;
+	
+	//DB related
+	private DictionaryRead originalDB = null;
 
 	// main UI thread related
 	private Thread th;
@@ -109,7 +112,22 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		paintWin.setAntiAlias(true);
 
 		setFocusable(true);
-		mWB = new Phrase(1).getContent();
+		
+		//TODO the main screen may pass a phrase to MySurfaceView
+		try {
+			originalDB = new DictionaryRead(getResources().getAssets().open("defaultDB.txt"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+		}	
+
+		// should be removed, the phrase is supplied by another activity
+		Random r = new Random();
+		String[] aStr = originalDB.getPhrases();
+		int index = r.nextInt(originalDB.getDBHighLimit());		
+		
+		mWB = PhraseSplit.split(originalDB.getPhrase(index));
 
 		fixedWB = new FixedWordBlock[mWB.length];
 		for (int i = 0; i < fixedWB.length; i++) {
@@ -127,7 +145,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	public void surfaceCreated(SurfaceHolder holder) {
 		screenW = this.getWidth(); // landscape width=854 height=480
 		screenH = this.getHeight();
-		// Log.i("phrase", "width=" + screenW + " height=" + screenH);
+		Log.i("phrase","width=" + screenW + " height=" + screenH);
 		initializeRandomBlocks();
 		svStartTime = System.currentTimeMillis(); // record the serfaceView created time
 		flag = true;
