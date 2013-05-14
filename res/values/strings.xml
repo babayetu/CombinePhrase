@@ -1,11 +1,16 @@
 <resources>
-
     <string name="app_name">CombinePhrase</string>
     <string name="game_activity_name">GameSurface</string>
+    <string name="addphrase_activity_name">AddPhrase</string>    
     <string name="menu_settings">Settings</string>
         
     <string name="combinephrase">拼句子</string>
-    <string name="choose_original">默认句子</string>
-    <string name="choose_custom">用户自定义句子</string> 
+    <string name="choose_original">使用默认句子</string>
+    <string name="choose_custom">使用用户自定义句子</string>
+    <string name="choose_addphrase">管理用户字典</string>
+    
+    <string name="addphrase">添加句子</string>     
+    <string name="addphrase_hint">添加句子到用户自定义字典</string> 
+    <string name="add_to_user_db">提交</string> 
     
 </resources>

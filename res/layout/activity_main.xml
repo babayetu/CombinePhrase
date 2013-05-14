@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/combinephrase"
-        android:layout_marginBottom="50dp" />
+        android:layout_marginBottom="30dp" />
     
     <Button
         android:id="@+id/btn_original"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_textview"
         android:layout_centerHorizontal ="true"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:text="@string/choose_original" />
     
     <Button
@@ -26,6 +26,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_original"
         android:layout_centerHorizontal ="true"
+        android:layout_marginBottom="30dp"
         android:text="@string/choose_custom" />
-    
+
+    <Button
+        android:id="@+id/btn_userphrase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_custom"
+        android:layout_centerHorizontal ="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/choose_addphrase" />    
 </RelativeLayout>

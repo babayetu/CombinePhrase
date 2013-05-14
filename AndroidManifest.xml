@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".GameActivity" android:label="@string/game_activity_name" android:screenOrientation="landscape"></activity>
+        <activity android:name=".GameActivity" android:label="@string/game_activity_name" android:screenOrientation="landscape"></activity>        
+        <activity android:name=".ManagePhraseActivity" android:label="@string/addphrase_activity_name" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

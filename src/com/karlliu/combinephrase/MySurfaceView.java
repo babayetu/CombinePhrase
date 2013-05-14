@@ -59,7 +59,9 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private final float statusBarYPadding = 5.0f;
 	private final float statusBarXLeftPadding = charLengthX;
 
-	private Bitmap bmp;
+	private Bitmap bmpBackGround;
+	private Bitmap bmpNext;
+	private Bitmap bmpRetry;
 	private int result;
 
 	// constant drop area
@@ -134,7 +136,9 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			fixedWB[i] = new FixedWordBlock();
 		}
 
-		bmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.background);
+		bmpBackGround = BitmapFactory.decodeResource(this.getResources(), R.drawable.background);
+		bmpNext = BitmapFactory.decodeResource(this.getResources(), R.drawable.next);
+		bmpRetry = BitmapFactory.decodeResource(this.getResources(), R.drawable.retry);
 		result = ONGOING;
 	}
 
@@ -164,7 +168,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			if (canvas != null) {
 				canvas.drawColor(Color.BLACK);
 
-				canvas.drawBitmap(bmp, 0, 0, paintText);
+				canvas.drawBitmap(bmpBackGround, 0, 0, paintText);
 				
 				//draw timer
 				canvas.drawCircle(30, screenH - 30, 20, paintBackGround);
@@ -186,10 +190,12 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 				if (result != ONGOING) {
 					if (result == WIN) {
 						paintWin.setColor(Color.YELLOW);
-						canvas.drawText("You Win", screenW / 4, screenH / 2, paintWin);
+						canvas.drawText("You Win", screenW / 3, screenH / 2, paintWin);
+						canvas.drawBitmap(bmpNext, screenW / 2, screenH / 2, paintWin);
 					} else if (result == FAIL) {
 						paintWin.setColor(Color.RED);
-						canvas.drawText("You FAIL", screenW / 4, screenH / 2, paintWin);
+						canvas.drawText("You FAIL", screenW / 3, screenH / 2, paintWin);
+						canvas.drawBitmap(bmpRetry, screenW / 2, screenH / 2, paintWin);
 					}
 				}
 			}

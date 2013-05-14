@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/add_phrase_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/addphrase"
+        android:layout_marginBottom="50dp" />
+        
+    <EditText
+        android:id="@+id/add_phrase"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="#00000000"
+        android:gravity="top"
+        android:hint="@string/addphrase_hint"
+        android:padding="8dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:layout_below="@id/add_phrase_tv">
+
+        <requestFocus />
+    </EditText>
+    
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_phrase"
+        android:layout_centerHorizontal ="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/add_to_user_db" />
+
+</RelativeLayout>
