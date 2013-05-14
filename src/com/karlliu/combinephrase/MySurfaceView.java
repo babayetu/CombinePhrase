@@ -124,7 +124,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 
 		// should be removed, the phrase is supplied by another activity
 		Random r = new Random();
-		String[] aStr = originalDB.getPhrases();
+		//String[] aStr = originalDB.getPhrases();
 		int index = r.nextInt(originalDB.getDBHighLimit());		
 		
 		mWB = PhraseSplit.split(originalDB.getPhrase(index));
@@ -206,22 +206,24 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		
+		//game finishes, no response needed
+		if (result == WIN || result == FAIL)
+			return true;
+		
 		// judge which word block is touched
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			for (int i = 0; i < mWB.length; i++) {
-				if (judgeTouched(mWB[i], event.getX(), event.getY())) {
-					mWB[i].setTouched(true);
-
-					// if mWB is already set in fixedWB, release lock
-					if (mWB[i].getOccupied() != -1) {
-						fixedWB[mWB[i].getOccupied()].setOccupied(-1); // fixedWB is not occupied by any mWB
-						mWB[i].setOccupied(-1); // mWB is not set in any fixedWB
-					}
-
-					// Log.i("phrase", "down " + i + " selected");
-					break;
-				}
+			int mostCloseWB = pickClosestWB(mWB, event.getX(), event.getY());
+			
+			updateWordBlock(mWB[mostCloseWB], event.getX(), event.getY());
+			mWB[mostCloseWB].setTouched(true);
+			
+			// if mWB is already set in fixedWB, release lock
+			if (mWB[mostCloseWB].getOccupied() != -1) {
+				fixedWB[mWB[mostCloseWB].getOccupied()].setOccupied(-1); // fixedWB is not occupied by any mWB
+				mWB[mostCloseWB].setOccupied(-1); // mWB is not set in any fixedWB
 			}
+
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			for (int i = 0; i < mWB.length; i++) {
 				if (mWB[i].getTouched()) {
@@ -370,6 +372,34 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		if (aWB.getBlockLeft() < x && x < aWB.getBlockRight() && aWB.getBlockTop() < y && y < aWB.getBlockBottom())
 			return true;
 		return false;
+	}
+	
+	// in case touch position is not in block range, auto pick one 
+	private int pickClosestWB(FixedWordBlock[] wbArray, float x, float y) {
+		int found = 0;
+		double distance = 0.0;
+		double tmpValue=0.0;
+		
+		for (int i=0;i<wbArray.length;i++) {
+			if (i==0)
+			{
+				distance = twoPointsDistance(wbArray[0].getBlockLeft(),wbArray[0].getBlockTop(),x,y);
+				continue;
+			}
+			
+			tmpValue = twoPointsDistance(wbArray[i].getBlockLeft(),wbArray[i].getBlockTop(),x,y);
+			
+			if (distance > tmpValue) {
+				distance = tmpValue;
+				found = i;
+			}				
+		}
+		
+		return found;
+	}
+	
+	private double twoPointsDistance(float x1, float y1, float x2, float y2) {
+		return Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));		
 	}
 
 	// initialized word blocks
