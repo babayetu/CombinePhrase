@@ -13,4 +13,6 @@
     <string name="addphrase_hint">添加句子到用户自定义字典</string> 
     <string name="add_to_user_db">提交</string> 
     
+    <string name="userDBPath">/sdcard/combinephrase</string>
+    <string name="userDBFile">userDB</string>
 </resources>

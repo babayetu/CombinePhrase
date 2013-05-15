@@ -3,6 +3,7 @@ package com.karlliu.combinephrase;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -31,9 +32,6 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private Paint paintWin;
 
 	private final int COLOR_OLIVER = 0xffcc9933;
-	
-	//DB related
-	private DictionaryRead originalDB = null;
 
 	// main UI thread related
 	private Thread th;
@@ -114,22 +112,8 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		paintWin.setAntiAlias(true);
 
 		setFocusable(true);
-		
-		//TODO the main screen may pass a phrase to MySurfaceView
-		try {
-			originalDB = new DictionaryRead(getResources().getAssets().open("defaultDB.txt"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
 
-		}	
-
-		// should be removed, the phrase is supplied by another activity
-		Random r = new Random();
-		//String[] aStr = originalDB.getPhrases();
-		int index = r.nextInt(originalDB.getDBHighLimit());		
-		
-		mWB = PhraseSplit.split(originalDB.getPhrase(index));
+		mWB = PhraseSplit.split();		
 
 		fixedWB = new FixedWordBlock[mWB.length];
 		for (int i = 0; i < fixedWB.length; i++) {
