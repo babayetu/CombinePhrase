@@ -21,7 +21,7 @@ import android.view.SurfaceView;
  * @author Himi
  * 
  */
-public class MySurfaceView extends SurfaceView implements Callback, Runnable {
+public class MySurfaceView extends SurfaceView implements Callback, Runnable {	
 	private SurfaceHolder sfh;
 
 	// different paint pen
@@ -113,7 +113,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 
 		setFocusable(true);
 
-		mWB = PhraseSplit.split();		
+		mWB = PhraseSplit.split(((GameActivity)context).getPhrase());		
 
 		fixedWB = new FixedWordBlock[mWB.length];
 		for (int i = 0; i < fixedWB.length; i++) {
