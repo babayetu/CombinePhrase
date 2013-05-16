@@ -3,7 +3,6 @@ package com.karlliu.combinephrase;
 import java.util.Random;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,8 +20,14 @@ import android.view.SurfaceView;
  * @author Himi
  * 
  */
-public class MySurfaceView extends SurfaceView implements Callback, Runnable {	
+public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private SurfaceHolder sfh;
+
+	// db phrase related
+	private String[] phrases;
+	private Random r = new Random();
+	private int dbHighLimit;
+	private int lastPhrase = 0;
 
 	// different paint pen
 	private Paint paintDropArea;
@@ -31,6 +36,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private Paint paintBackGround;
 	private Paint paintWin;
 
+	// color related
 	private final int COLOR_OLIVER = 0xffcc9933;
 
 	// main UI thread related
@@ -40,7 +46,6 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private int screenW, screenH;
 	private WordBlock[] mWB;
 	private FixedWordBlock[] fixedWB;
-	private boolean initialized = false;
 	private long svStartTime;
 	private long currentTime;
 	private long leftTime;
@@ -49,7 +54,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private final int randomBlockPlaceY = 200; // random word block initial Y position - below the Y lines
 	private final int textPaintSize = 30;
 	private final int winPaintSize = 80;
-	private final int charLengthX = 20;
+	private final int charLengthX = 15;
 	private final int charHeightY = 40;
 	private final int xBlockPadding = 20; // word block x need to be longer to hold all chars
 	private final float textShiftX = 5.0f;
@@ -57,9 +62,12 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private final float statusBarYPadding = 5.0f;
 	private final float statusBarXLeftPadding = charLengthX;
 
+	//picture related
 	private Bitmap bmpBackGround;
 	private Bitmap bmpNext;
 	private Bitmap bmpRetry;
+	private final int resolutionThrottle=900;	
+	//process control
 	private int result;
 
 	// constant drop area
@@ -67,10 +75,15 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private final float columnSpace = 10.0f;
 	private final float dropAreaLeft = 10.0f;
 	private final float dropAreaTop = 10.0f;
-	private final float dropBoxWidth = charLengthX * 8.0f; // every drop box width = 20 * 8 =160 160*5=800
+	private final float dropBoxWidth = charLengthX * 10.0f; // every drop box width = 15 * 10 =150 160*5=800
 	private final float dropBoxHeight = charHeightY;
 	private int dropBoxColumns = 5; // columns one line
 	private int TIMEOUT = 60000; // 60 seconds
+
+	// constant retry and next image position
+	private float retryLeft;
+	private float retryTop;
+	private final float imageSize = 100;
 
 	private final int WIN = 2;
 	private final int FAIL = 1;
@@ -113,17 +126,8 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 
 		setFocusable(true);
 
-		mWB = PhraseSplit.split(((GameActivity)context).getPhrase());		
-
-		fixedWB = new FixedWordBlock[mWB.length];
-		for (int i = 0; i < fixedWB.length; i++) {
-			fixedWB[i] = new FixedWordBlock();
-		}
-
-		bmpBackGround = BitmapFactory.decodeResource(this.getResources(), R.drawable.background);
-		bmpNext = BitmapFactory.decodeResource(this.getResources(), R.drawable.next);
-		bmpRetry = BitmapFactory.decodeResource(this.getResources(), R.drawable.retry);
-		result = ONGOING;
+		phrases = ((GameActivity) context).getPhrases();
+		dbHighLimit = ((GameActivity) context).getDBHighLimit();
 	}
 
 	/**
@@ -133,9 +137,11 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	public void surfaceCreated(SurfaceHolder holder) {
 		screenW = this.getWidth(); // landscape width=854 height=480
 		screenH = this.getHeight();
-		Log.i("phrase","width=" + screenW + " height=" + screenH);
+
+		// Log.i("phrase","width=" + screenW + " height=" + screenH);
+		RandomSelectOnePhrase(); // mWB initialization places
 		initializeRandomBlocks();
-		svStartTime = System.currentTimeMillis(); // record the serfaceView created time
+
 		flag = true;
 		// initialize the thread
 		th = new Thread(this);
@@ -153,8 +159,8 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 				canvas.drawColor(Color.BLACK);
 
 				canvas.drawBitmap(bmpBackGround, 0, 0, paintText);
-				
-				//draw timer
+
+				// draw timer
 				canvas.drawCircle(30, screenH - 30, 20, paintBackGround);
 				canvas.drawText(Long.toString(leftTime), 15, screenH - 20, paintText);
 
@@ -175,11 +181,11 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 					if (result == WIN) {
 						paintWin.setColor(Color.YELLOW);
 						canvas.drawText("You Win", screenW / 3, screenH / 2, paintWin);
-						canvas.drawBitmap(bmpNext, screenW / 2, screenH / 2, paintWin);
+						canvas.drawBitmap(bmpNext, retryLeft, retryTop, paintWin);
 					} else if (result == FAIL) {
 						paintWin.setColor(Color.RED);
 						canvas.drawText("You FAIL", screenW / 3, screenH / 2, paintWin);
-						canvas.drawBitmap(bmpRetry, screenW / 2, screenH / 2, paintWin);
+						canvas.drawBitmap(bmpRetry, retryLeft, retryTop, paintWin);
 					}
 				}
 			}
@@ -196,18 +202,31 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		
-		//game finishes, no response needed
-		if (result == WIN || result == FAIL)
-			return true;
-		
+
+		// game finishes, no response needed
+		if (result == WIN || result == FAIL) {
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				if (judgeTouched(retryLeft, retryTop, retryLeft + imageSize, retryTop + imageSize, event.getX(), event.getY())) {
+					if (result == WIN) {
+						RandomSelectOnePhrase();
+						initializeRandomBlocks();
+					} else if (result == FAIL) {						
+						initializeRandomBlocks();
+					}
+				}
+
+			}
+
+			return false; // will not response to other touch event
+		}
+
 		// judge which word block is touched
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			int mostCloseWB = pickClosestWB(mWB, event.getX(), event.getY());
-			
+
 			updateWordBlock(mWB[mostCloseWB], event.getX(), event.getY());
 			mWB[mostCloseWB].setTouched(true);
-			
+
 			// if mWB is already set in fixedWB, release lock
 			if (mWB[mostCloseWB].getOccupied() != -1) {
 				fixedWB[mWB[mostCloseWB].getOccupied()].setOccupied(-1); // fixedWB is not occupied by any mWB
@@ -275,7 +294,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			return;
 
 		currentTime = System.currentTimeMillis();
-		leftTime = (TIMEOUT - currentTime + svStartTime) > 0 ? (TIMEOUT - currentTime + svStartTime)/1000 : 0;
+		leftTime = (TIMEOUT - currentTime + svStartTime) > 0 ? (TIMEOUT - currentTime + svStartTime) / 1000 : 0;
 		if (leftTime == 0) {
 			result = FAIL;
 			return;
@@ -363,41 +382,74 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			return true;
 		return false;
 	}
-	
-	// in case touch position is not in block range, auto pick one 
+
+	// judge area is touched
+	private boolean judgeTouched(float areaX1, float areaY1, float areaX2, float areaY2, float x, float y) {
+		if (areaX1 < x && x < areaX2 && areaY1 < y && y < areaY2)
+			return true;
+		return false;
+	}
+
+	// in case touch position is not in block range, auto pick one
 	private int pickClosestWB(FixedWordBlock[] wbArray, float x, float y) {
 		int found = 0;
 		double distance = 0.0;
-		double tmpValue=0.0;
-		
-		for (int i=0;i<wbArray.length;i++) {
-			if (i==0)
-			{
-				distance = twoPointsDistance(wbArray[0].getBlockLeft(),wbArray[0].getBlockTop(),x,y);
+		double tmpValue = 0.0;
+
+		for (int i = 0; i < wbArray.length; i++) {
+			if (i == 0) {
+				distance = twoPointsDistance(wbArray[0].getBlockLeft(), wbArray[0].getBlockTop(), x, y);
 				continue;
 			}
-			
-			tmpValue = twoPointsDistance(wbArray[i].getBlockLeft(),wbArray[i].getBlockTop(),x,y);
-			
+
+			tmpValue = twoPointsDistance(wbArray[i].getBlockLeft(), wbArray[i].getBlockTop(), x, y);
+
 			if (distance > tmpValue) {
 				distance = tmpValue;
 				found = i;
-			}				
+			}
 		}
-		
+
 		return found;
 	}
-	
+
 	private double twoPointsDistance(float x1, float y1, float x2, float y2) {
-		return Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));		
+		return Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
+	}
+
+	private void RandomSelectOnePhrase() {
+		//avoid two same sentences appear sequentially
+		int tmpInt = 0;
+		do {
+			tmpInt = r.nextInt(dbHighLimit);
+		} while (lastPhrase == tmpInt && dbHighLimit > 1);
+
+		mWB = PhraseSplit.split(phrases[tmpInt]);
+		lastPhrase = tmpInt;
 	}
 
 	// initialized word blocks
-	public void initializeRandomBlocks() {
-		// Y start from 600, X starts from 0
-		if (initialized)
-			return;
+	private void initializeRandomBlocks() {
 
+		result = ONGOING;
+		retryLeft = screenW * 2 / 3 + paintWin.getTextSize();
+		retryTop = screenH / 2 - paintWin.getTextSize();
+		svStartTime = System.currentTimeMillis(); // record the serfaceView created time
+		
+		if (screenW > resolutionThrottle)
+			bmpBackGround = BitmapFactory.decodeResource(this.getResources(), R.drawable.backgroundh);
+		else
+			bmpBackGround = BitmapFactory.decodeResource(this.getResources(), R.drawable.backgroundl);
+		
+		bmpNext = BitmapFactory.decodeResource(this.getResources(), R.drawable.next);
+		bmpRetry = BitmapFactory.decodeResource(this.getResources(), R.drawable.retry);		
+
+		fixedWB = new FixedWordBlock[mWB.length];
+		for (int i = 0; i < fixedWB.length; i++) {
+			fixedWB[i] = new FixedWordBlock();
+		}
+
+		// Y start from 600, X starts from 0
 		ColorPalette cp = new ColorPalette();
 
 		Random rPosition = new Random();
@@ -429,6 +481,5 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			fixedWB[i].setBlockBottom(fixedWB[i].getBlockTop() + dropBoxHeight);
 		}
 
-		initialized = true;
 	}
 }

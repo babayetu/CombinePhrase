@@ -1,7 +1,5 @@
 package com.karlliu.combinephrase;
 
-import java.util.Random;
-
 public class WordBlock extends FixedWordBlock {
 	private String content;
 	private int index;

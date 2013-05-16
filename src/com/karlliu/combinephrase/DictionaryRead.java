@@ -1,12 +1,13 @@
 package com.karlliu.combinephrase;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.util.Log;
+
 public class DictionaryRead {
-	private String[] mPhraseStore = null;
+	private String[] mPhraseStore;
 	private final int storeSize = 50;
 	private int dbNotFullHighLimit = 0;   //if database is not full < storeSize, this value mark the high limit
 	
@@ -18,7 +19,7 @@ public class DictionaryRead {
 		
 		//initialization the string array
 		mPhraseStore = new String[storeSize];
-				for (int i=0; i<storeSize; i++)
+		for (int i=0; i<storeSize; i++)
 		{
 			mPhraseStore[i] = new String("");
 		}
@@ -35,13 +36,13 @@ public class DictionaryRead {
 			dbNotFullHighLimit = loop;			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.i("DictionaryRead", e.toString());
 		} finally {
 			try {
 				if (reader != null)
 					reader.close();
 			} catch (Exception e2) {
-				e2.printStackTrace();
+				Log.i("DictionaryRead", e2.toString());
 			}
 
 		}

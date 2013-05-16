@@ -1,6 +1,5 @@
 package com.karlliu.combinephrase;
 
-import android.graphics.Paint;
 import android.graphics.Path;
 
 public class Clipper extends Path {

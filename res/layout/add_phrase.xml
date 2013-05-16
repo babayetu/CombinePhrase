@@ -24,7 +24,8 @@
         android:padding="8dp"
         android:textColor="#000000"
         android:textSize="20sp"
-        android:layout_below="@id/add_phrase_tv">
+        android:layout_below="@id/add_phrase_tv"
+        android:inputType="textNoSuggestions">
 
         <requestFocus />
     </EditText>
@@ -33,9 +34,36 @@
         android:id="@+id/btn_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_phrase"
-        android:layout_centerHorizontal ="true"
+        android:layout_below="@id/add_phrase"
+        android:layout_marginLeft="30dp"
         android:layout_marginBottom="30dp"
         android:text="@string/add_to_user_db" />
+    
+    <Button
+        android:id="@+id/btn_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_phrase"
+        android:layout_toRightOf="@id/btn_submit"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/clear_user_db" />    
 
+    <Button
+        android:id="@+id/btn_back_to_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_phrase"
+        android:layout_toRightOf="@id/btn_clear"
+        android:layout_marginLeft="30dp"        
+        android:layout_marginBottom="30dp"
+        android:text="@string/back_to_main" />
+    
+    <TextView
+        android:id="@+id/show_phrase_tv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btn_back_to_main"
+        android:layout_marginTop="20dp" />
 </RelativeLayout>

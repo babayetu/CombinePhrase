@@ -11,8 +11,13 @@
     
     <string name="addphrase">添加句子</string>     
     <string name="addphrase_hint">添加句子到用户自定义字典</string> 
-    <string name="add_to_user_db">提交</string> 
+    <string name="add_to_user_db">提交</string>
+    <string name="clear_user_db">清除</string>    
+    <string name="back_to_main">返回</string>
     
     <string name="userDBPath">/sdcard/combinephrase</string>
     <string name="userDBFile">userDB</string>
+    
+    <string name="userDBClear">用户字典清除成功</string>
+    <string name="sdNotReady">SD卡已移除</string>
 </resources>
