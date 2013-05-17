@@ -66,7 +66,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private Bitmap bmpBackGround;
 	private Bitmap bmpNext;
 	private Bitmap bmpRetry;
-	private final int resolutionThrottle = 900;
+	private final int resolutionThrottle = 900;		// screenW is wider then 900, we use high resolution background
 	// process control
 	private int result;
 
@@ -78,7 +78,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private final float dropBoxWidth = charLengthX * 10.0f; // every drop box width = 15 * 10 =150 160*5=800
 	private final float dropBoxHeight = charHeightY;
 	private int dropBoxColumns = 5; // columns one line
-	private int TIMEOUT = 60000; // 60 seconds
+	private int TIMEOUT = 99000; // 99 seconds
 
 	// constant retry and next image position
 	private float retryLeft;
@@ -249,7 +249,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 		// game finishes, no response needed
 		if (result == WIN || result == FAIL) {
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				if (judgeTouched(retryLeft, retryTop, retryLeft + imageSize, retryTop + imageSize, event.getX(), event.getY())) {
+				if (judgeTouched(retryLeft - imageSize, retryTop- imageSize, retryLeft + imageSize, retryTop + imageSize, event.getX(), event.getY())) {
 					if (result == WIN) {
 						RandomSelectOnePhrase();
 						initializeRandomBlocks();
@@ -301,7 +301,6 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 							mWB[i].setOccupied(j); // mWB[i] is set in fixedWB[j]
 
 							movedInDropBox = true;
-							// Log.i("phrase", "dropped in " + j + " drop box");
 							break;
 						}
 					}
@@ -311,7 +310,6 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 						updateWordBlock(mWB[i], event.getX(), event.getY());
 
 					mWB[i].setTouched(false);
-					// Log.i("phrase", "up " + i + " changed");
 
 				}
 			}

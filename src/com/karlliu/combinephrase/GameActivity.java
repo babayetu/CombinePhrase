@@ -44,7 +44,6 @@ public class GameActivity extends Activity {
 	        		fis = new FileInputStream(filePath);
 	        		userDB = new DictionaryRead(fis);
 	        		phrases = userDB.getPhrases();
-	        		Log.v("phrase", phrases[0]);
 	        		dbHighLimit = userDB.getDBHighLimit();
 	        		
 				} catch (Exception e) {

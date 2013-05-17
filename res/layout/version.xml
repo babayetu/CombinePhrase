@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/author_prompt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/author_prompt"
+        android:textSize="20sp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="40dp" /> 
+            
+    <TextView
+        android:id="@+id/author_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/author"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/author_prompt_tv"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginBottom="40dp" />
+    
+    <TextView
+        android:id="@+id/version_prompt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/version_prompt"
+        android:textSize="20sp"
+        android:layout_below="@id/author_prompt_tv"
+        android:layout_alignLeft="@id/author_prompt_tv"
+        android:layout_marginBottom="40dp" /> 
+            
+    <TextView
+        android:id="@+id/versione_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/version"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/version_prompt_tv"
+        android:layout_alignLeft="@id/author_tv"
+        android:layout_below="@id/author_tv"
+        android:layout_marginBottom="40dp" />
+    
+    <TextView
+        android:id="@+id/email_prompt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email_prompt"
+        android:textSize="20sp"
+        android:layout_below="@id/version_prompt_tv"
+        android:layout_alignLeft="@id/author_prompt_tv"   
+        android:layout_marginBottom="40dp" /> 
+            
+    <TextView
+        android:id="@+id/email_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:textSize="20sp"
+        android:layout_below="@id/version_prompt_tv"
+        android:layout_toRightOf="@id/email_prompt_tv"
+        android:layout_alignLeft="@id/author_tv"
+        android:layout_marginBottom="40dp" />
+    
+    <TextView
+        android:id="@+id/qq_prompt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/qq_prompt"
+        android:textSize="20sp"
+        android:layout_below="@id/email_prompt_tv"
+        android:layout_alignLeft="@id/author_prompt_tv"
+        android:layout_marginBottom="40dp" />
+            
+    <TextView
+        android:id="@+id/qq_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/qq"
+        android:textSize="20sp"
+        android:layout_below="@id/email_prompt_tv"
+        android:layout_toRightOf="@id/qq_prompt_tv"
+        android:layout_alignLeft="@id/author_tv"
+        android:layout_marginBottom="40dp" />
+</RelativeLayout>

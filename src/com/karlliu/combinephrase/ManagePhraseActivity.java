@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -24,8 +25,10 @@ import android.widget.Toast;
 
 public class ManagePhraseActivity extends Activity implements OnClickListener{
 	private Button btn_submit, btn_back_to_main, btn_clear;
+	private Button btn_a1, btn_a2,btn_c1,btn_e1,btn_e2,btn_e3,btn_e4,btn_i1,btn_i2,btn_o1;
+	private Button btn_o2,btn_u1,btn_u2,btn_A1,btn_A2,btn_C1,btn_E1,btn_E2,btn_E3,btn_I1;
 	private EditText editArea;
-	private TextView tv, show_phrase_tv;
+	private TextView tv;
 	private String uDBPath, uDBFile;
 	
     @Override
@@ -38,10 +41,8 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.add_phrase);
 		
     	tv = (TextView) findViewById(R.id.add_phrase_tv);
-		tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
-		
-		show_phrase_tv = (TextView) findViewById(R.id.show_phrase_tv);
-		show_phrase_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+		tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);		
+
 		
 		btn_submit = (Button) findViewById(R.id.btn_submit);
 		btn_submit.setOnClickListener(this);
@@ -57,13 +58,170 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 		uDBPath = getResources().getString(R.string.userDBPath);
 		uDBFile = getResources().getString(R.string.userDBFile);
 		
-		showUserDB();		
+		btn_a1 = (Button) findViewById(R.id.btn_a1);
+		btn_a1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.a1));
+			}
+		});
+		
+		btn_a2 = (Button) findViewById(R.id.btn_a2);
+		btn_a2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.a2));
+			}
+		});		
+
+		btn_c1 = (Button) findViewById(R.id.btn_c1);
+		btn_c1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.c1));
+			}
+		});
+		
+		btn_e1 = (Button) findViewById(R.id.btn_e1);
+		btn_e1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.e1));
+			}
+		});
+		
+		btn_e2 = (Button) findViewById(R.id.btn_e2);
+		btn_e2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.e2));
+			}
+		});
+		
+		btn_e3 = (Button) findViewById(R.id.btn_e3);
+		btn_e3.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.e3));
+			}
+		});
+
+		btn_e4 = (Button) findViewById(R.id.btn_e4);
+		btn_e4.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.e4));
+			}
+		});
+		
+		btn_i1 = (Button) findViewById(R.id.btn_i1);
+		btn_i1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.i1));
+			}
+		});
+		
+		btn_i2 = (Button) findViewById(R.id.btn_i2);
+		btn_i2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.i2));
+			}
+		});
+		
+		btn_o1 = (Button) findViewById(R.id.btn_o1);
+		btn_o1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.o1));
+			}
+		});
+		
+		btn_o2 = (Button) findViewById(R.id.btn_o2);
+		btn_o2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.o2));
+			}
+		});
+		
+		btn_u1 = (Button) findViewById(R.id.btn_u1);
+		btn_u1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.u1));
+			}
+		});		
+
+		btn_u2 = (Button) findViewById(R.id.btn_u2);
+		btn_u2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.u2));
+			}
+		});
+		
+		btn_A1 = (Button) findViewById(R.id.btn_A1);
+		btn_A1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.A1));
+			}
+		});
+		
+		btn_A2 = (Button) findViewById(R.id.btn_A2);
+		btn_A2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.A2));
+			}
+		});
+		
+		btn_C1 = (Button) findViewById(R.id.btn_C1);
+		btn_C1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.C1));
+			}
+		});
+
+		btn_E1 = (Button) findViewById(R.id.btn_E1);
+		btn_E1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.E1));
+			}
+		});
+		
+		btn_E2 = (Button) findViewById(R.id.btn_E2);
+		btn_E2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.E2));
+			}
+		});
+		
+		btn_E3 = (Button) findViewById(R.id.btn_E3);
+		btn_E3.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.E3));
+			}
+		});
+		
+		btn_I1 = (Button) findViewById(R.id.btn_I1);
+		btn_I1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editArea.setText(editArea.getText() + getResources().getString(R.string.I1));
+			}
+		});		
     }
     
     @Override
 	public void onClick(View v) {
 		if (v == btn_submit) {
-			//Log.v("add phrase", editArea.getText().toString());
 			saveToUserDB(editArea.getText().toString());
 		} else if (v == btn_back_to_main) {
 			//switch to main interface
@@ -98,7 +256,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 
     			editArea.setText("");   //clear content
     			Toast.makeText(this, "Phrase added successfully" , Toast.LENGTH_SHORT).show();
-    			showUserDB();
+
 			} catch (Exception e) {
 				Log.e("saveToUserDB1", e.toString());
 			} finally {
@@ -117,45 +275,45 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
     	}
     }
     
-    private void showUserDB() {
-    	File directoryPath = new File(uDBPath);
-		File filePath = new File(uDBPath + "/" + uDBFile);
-		FileReader fr = null;
-		BufferedReader reader = null;
-		String tmpStr = null;
-		
-		try {
-    		if (!directoryPath.exists()) {
-    			directoryPath.mkdirs();
-    			return;
-    		}
-    		if (!filePath.exists()) {
-    			return;
-    		}		
-    		
-    		//clear show phrase contents
-    		show_phrase_tv.setText("");
-    		
-    		fr = new FileReader(filePath);
-    		reader = new BufferedReader(fr);
-			
-			while ((tmpStr = reader.readLine()) != null ) {
-				show_phrase_tv.setText(show_phrase_tv.getText() + "\n" + tmpStr);
-			}
-      		
-		} catch (Exception e) {
-			Log.e("showUserDB", e.toString());
-		} finally {
-			try {
-				if (fr!=null)
-					fr.close();
-				if (reader!=null)
-					reader.close();				
-			} catch (Exception e2) {
-				Log.e("showUserDB", e2.toString());
-			}
-		}
-    }
+//    private void showUserDB() {
+//    	File directoryPath = new File(uDBPath);
+//		File filePath = new File(uDBPath + "/" + uDBFile);
+//		FileReader fr = null;
+//		BufferedReader reader = null;
+//		String tmpStr = null;
+//		
+//		try {
+//    		if (!directoryPath.exists()) {
+//    			directoryPath.mkdirs();
+//    			return;
+//    		}
+//    		if (!filePath.exists()) {
+//    			return;
+//    		}		
+//    		
+//    		//clear show phrase contents
+//    		show_phrase_tv.setText("");
+//    		
+//    		fr = new FileReader(filePath);
+//    		reader = new BufferedReader(fr);
+//			
+//			while ((tmpStr = reader.readLine()) != null ) {
+//				show_phrase_tv.setText(show_phrase_tv.getText() + "\n" + tmpStr);
+//			}
+//      		
+//		} catch (Exception e) {
+//			Log.e("showUserDB", e.toString());
+//		} finally {
+//			try {
+//				if (fr!=null)
+//					fr.close();
+//				if (reader!=null)
+//					reader.close();				
+//			} catch (Exception e2) {
+//				Log.e("showUserDB", e2.toString());
+//			}
+//		}
+//    }
     
     private void clearUserDB() {
     	FileWriter fw = null;
@@ -167,11 +325,9 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
     		
     		try {
         		if (!directoryPath.exists()) {
-        			show_phrase_tv.setText("");
         			return;
         		}
         		if (!filePath.exists()) {
-        			show_phrase_tv.setText("");
         			return;
         		}			
         		
@@ -181,7 +337,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
         		bw.flush();
 
     			Toast.makeText(this, getResources().getString(R.string.userDBClear), Toast.LENGTH_SHORT).show();
-    			showUserDB();
+
 			} catch (Exception e) {
 				Log.e("clearUserDB", e.toString());
 			} finally {

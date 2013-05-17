@@ -1,7 +1,7 @@
 package com.karlliu.combinephrase;
 
 public class PhraseSplit {
-	private static String splitToken = " |,";
+	private static String splitToken = " ";
 
 	public static WordBlock[] split(String input) {
 		// word block initialization only needs two parameters
