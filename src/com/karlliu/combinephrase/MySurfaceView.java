@@ -62,12 +62,12 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	private final float statusBarYPadding = 5.0f;
 	private final float statusBarXLeftPadding = charLengthX;
 
-	//picture related
+	// picture related
 	private Bitmap bmpBackGround;
 	private Bitmap bmpNext;
 	private Bitmap bmpRetry;
-	private final int resolutionThrottle=900;	
-	//process control
+	private final int resolutionThrottle = 900;
+	// process control
 	private int result;
 
 	// constant drop area
@@ -198,6 +198,49 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	}
 
 	/**
+	 * My Win or Fail draw part
+	 */
+
+	private void myWinDraw() {
+		try {
+			canvas = sfh.lockCanvas();
+			if (canvas != null) {
+				canvas.drawColor(Color.BLACK);
+
+				canvas.drawBitmap(bmpBackGround, 0, 0, paintText);
+
+				// draw timer
+				canvas.drawCircle(30, screenH - 30, 20, paintBackGround);
+				canvas.drawText(Long.toString(leftTime), 15, screenH - 20, paintText);
+
+				paintWordBlock.setColor(Color.GRAY);
+				for (int i = 0; i < mWB.length; i++) {
+					canvas.drawRect(mWB[i].getBlockLeft(), mWB[i].getBlockTop(), mWB[i].getBlockRight(), mWB[i].getBlockBottom(), paintWordBlock);
+					canvas.drawText(mWB[i].getContent(), mWB[i].getBlockLeft() + textShiftX, mWB[i].getBlockTop() + textShiftY, paintText);
+				}
+
+				// draw clippers
+				drawDropArea();
+
+				if (result == WIN) {
+					paintWin.setColor(Color.YELLOW);
+					canvas.drawText("You Win", screenW / 3, screenH / 2, paintWin);
+					canvas.drawBitmap(bmpNext, retryLeft, retryTop, paintWin);
+				} else if (result == FAIL) {
+					paintWin.setColor(Color.RED);
+					canvas.drawText("You FAIL", screenW / 3, screenH / 2, paintWin);
+					canvas.drawBitmap(bmpRetry, retryLeft, retryTop, paintWin);
+				}
+			}
+		} catch (Exception e) {
+			Log.e("phrase", "myWinDraw " + e.toString());
+		} finally {
+			if (canvas != null)
+				sfh.unlockCanvasAndPost(canvas);
+		}
+	}
+
+	/**
 	 * Monitor screen touch event
 	 */
 	@Override
@@ -210,7 +253,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 					if (result == WIN) {
 						RandomSelectOnePhrase();
 						initializeRandomBlocks();
-					} else if (result == FAIL) {						
+					} else if (result == FAIL) {
 						initializeRandomBlocks();
 					}
 				}
@@ -321,8 +364,18 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	public void run() {
 		while (flag) {
 			long start = System.currentTimeMillis();
-			myDraw();
-			logic();
+			switch (result) {
+			case ONGOING:
+				myDraw();
+				logic();
+				break;
+			case WIN:
+			case FAIL:
+				myWinDraw();
+				break;
+			default:
+			}
+
 			long end = System.currentTimeMillis();
 			try {
 				if (end - start < 50) {
@@ -418,7 +471,7 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	}
 
 	private void RandomSelectOnePhrase() {
-		//avoid two same sentences appear sequentially
+		// avoid two same sentences appear sequentially
 		int tmpInt = 0;
 		do {
 			tmpInt = r.nextInt(dbHighLimit);
@@ -431,18 +484,17 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 	// initialized word blocks
 	private void initializeRandomBlocks() {
 
-		result = ONGOING;
 		retryLeft = screenW * 2 / 3 + paintWin.getTextSize();
 		retryTop = screenH / 2 - paintWin.getTextSize();
 		svStartTime = System.currentTimeMillis(); // record the serfaceView created time
-		
+
 		if (screenW > resolutionThrottle)
 			bmpBackGround = BitmapFactory.decodeResource(this.getResources(), R.drawable.backgroundh);
 		else
 			bmpBackGround = BitmapFactory.decodeResource(this.getResources(), R.drawable.backgroundl);
-		
+
 		bmpNext = BitmapFactory.decodeResource(this.getResources(), R.drawable.next);
-		bmpRetry = BitmapFactory.decodeResource(this.getResources(), R.drawable.retry);		
+		bmpRetry = BitmapFactory.decodeResource(this.getResources(), R.drawable.retry);
 
 		fixedWB = new FixedWordBlock[mWB.length];
 		for (int i = 0; i < fixedWB.length; i++) {
@@ -481,5 +533,6 @@ public class MySurfaceView extends SurfaceView implements Callback, Runnable {
 			fixedWB[i].setBlockBottom(fixedWB[i].getBlockTop() + dropBoxHeight);
 		}
 
+		result = ONGOING;
 	}
 }
