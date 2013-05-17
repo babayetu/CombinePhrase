@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener{
-	private Button btn_original, btn_custom,btn_userphrase;
+	private Button btn_original, btn_custom,btn_userphrase, btn_exit;
 	private TextView tv;
 	private String uDBPath, uDBFile;
 	
@@ -23,16 +23,20 @@ public class MainActivity extends Activity implements OnClickListener{
     	btn_original = (Button) findViewById(R.id.btn_original);
     	btn_custom = (Button) findViewById(R.id.btn_custom);
     	btn_userphrase = (Button) findViewById(R.id.btn_userphrase);
+    	btn_exit = (Button) findViewById(R.id.btn_exit);
     	
     	tv = (TextView) findViewById(R.id.app_textview);
     	tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);    	
    	
     	btn_original.setOnClickListener(this);
     	btn_custom.setOnClickListener(this);
-    	btn_userphrase.setOnClickListener(this);  
+    	btn_userphrase.setOnClickListener(this); 
+    	btn_exit.setOnClickListener(this);
     	
 		uDBPath = getResources().getString(R.string.userDBPath);
-		uDBFile = getResources().getString(R.string.userDBFile);    	
+		uDBFile = getResources().getString(R.string.userDBFile);
+		
+		ActivityManageApplication.getInstance().addActivity(this);
     }
     
 	@Override
@@ -50,6 +54,8 @@ public class MainActivity extends Activity implements OnClickListener{
 		} else if (v == btn_userphrase) {			
 			intent.setClass(this, ManagePhraseActivity.class);
 			startActivityForResult(intent,0);			
+		}  else if (v == btn_exit) {			
+			ActivityManageApplication.getInstance().exit();			
 		}
 	}    
 }

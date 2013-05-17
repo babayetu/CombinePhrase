@@ -1,23 +1,19 @@
 package com.karlliu.combinephrase;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.InputStreamReader;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Selection;
+import android.text.Spannable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -63,6 +59,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.a1));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -71,6 +68,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.a2));
+				setCursorPos(editArea);
 			}
 		});		
 
@@ -79,6 +77,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.c1));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -87,6 +86,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.e1));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -95,6 +95,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.e2));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -103,6 +104,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.e3));
+				setCursorPos(editArea);
 			}
 		});
 
@@ -111,6 +113,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.e4));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -119,6 +122,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.i1));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -127,6 +131,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.i2));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -135,6 +140,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.o1));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -143,6 +149,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.o2));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -151,6 +158,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.u1));
+				setCursorPos(editArea);
 			}
 		});		
 
@@ -159,6 +167,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.u2));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -167,6 +176,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.A1));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -175,6 +185,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.A2));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -183,6 +194,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.C1));
+				setCursorPos(editArea);
 			}
 		});
 
@@ -191,6 +203,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.E1));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -199,6 +212,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.E2));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -207,6 +221,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.E3));
+				setCursorPos(editArea);
 			}
 		});
 		
@@ -215,8 +230,11 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				editArea.setText(editArea.getText() + getResources().getString(R.string.I1));
+				setCursorPos(editArea);
 			}
 		});		
+		
+		ActivityManageApplication.getInstance().addActivity(this);
     }
     
     @Override
@@ -354,5 +372,13 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
     	} else {
     		Toast.makeText(this, getResources().getString(R.string.sdNotReady) , Toast.LENGTH_SHORT).show();
     	}    	
+    }
+    
+    private void setCursorPos(EditText et) {
+		CharSequence text = et.getText();
+		if (text instanceof Spannable) {
+			Spannable spanText = (Spannable)text;
+			Selection.setSelection(spanText, text.length());
+		}
     }
 }

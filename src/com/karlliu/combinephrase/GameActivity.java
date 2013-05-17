@@ -65,6 +65,8 @@ public class GameActivity extends Activity {
 		}		
 		
 		setContentView(new MySurfaceView(this));
+		
+		ActivityManageApplication.getInstance().addActivity(this);
     }
     
     public String[] getPhrases() {
