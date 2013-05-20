@@ -52,7 +52,8 @@ public class MainActivity extends Activity implements OnClickListener{
 			intent.putExtra("phraseDB", uDBPath + "/" + uDBFile);
 			startActivityForResult(intent,0);
 		} else if (v == btn_userphrase) {			
-			intent.setClass(this, ManagePhraseActivity.class);
+			//intent.setClass(this, ManagePhraseActivity.class);
+			intent.setClass(this, PhraseInputActivity.class);
 			startActivityForResult(intent,0);			
 		}  else if (v == btn_exit) {			
 			ActivityManageApplication.getInstance().exit();			

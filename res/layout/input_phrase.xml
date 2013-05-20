@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/input_phrase_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:text="@string/addphrase" />
+
+    <EditText
+        android:id="@+id/input_phrase"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_phrase_tv"
+        android:layout_marginBottom="50dp"
+        android:background="#00000000"
+        android:gravity="top"
+        android:hint="@string/addphrase_hint"
+        android:padding="8dp"
+        android:singleLine="false"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:inputType="textMultiLine" >
+        <requestFocus />
+    </EditText> 
+    
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_phrase"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:text="@string/add_to_user_db" />
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_phrase"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@id/btn_add"
+        android:text="@string/back_to_main" />
+    
+	<ImageButton  
+	    android:id="@+id/imageBtn"
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content"	 	
+	 	android:background="@drawable/francais"
+	 	android:layout_toRightOf="@id/btn_back"
+	 	android:layout_below="@id/input_phrase"
+	 	android:layout_marginTop="10dp"
+	 	android:layout_marginLeft="30dp" />
+</RelativeLayout>

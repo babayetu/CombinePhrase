@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">CombinePhrase</string>
     <string name="game_activity_name">GameSurface</string>
-    <string name="addphrase_activity_name">AddPhrase</string>    
+    <string name="addphrase_activity_name">AddPhrase</string> 
+    <string name="phrase_input_activity_name">AddPhrase</string>    
     <string name="menu_settings">Settings</string>
         
     <string name="combinephrase">拼句子</string>
@@ -32,21 +33,26 @@
     <string name="email">37175519@qq.com</string>
     <string name="qq">37175519</string>
     
+    
+    <string name="keypad_title">francais lettre</string>
     <string name="a1">à</string>
     <string name="a2">â</string>
     <string name="c1">ç</string>
     <string name="e1">é</string>
     <string name="e2">è</string>
+    
     <string name="e3">ê</string>
     <string name="e4">ë</string>
     <string name="i1">î</string>
     <string name="i2">ï</string>
     <string name="o1">ô</string>
-    <string name="o2">œ</string>
+    
+    <string name="o2">œ</string>    
     <string name="u1">ù</string>
     <string name="u2">û</string> 
     <string name="A1">À</string>
     <string name="A2">Â</string>
+    
     <string name="C1">Ç</string>
     <string name="E1">É</string>  
     <string name="E2">È</string>

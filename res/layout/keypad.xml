@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keypad"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:stretchColumns="*" >
+
+    <TableRow>
+        <Button
+            android:id="@+id/btn_a1"
+            android:text="@string/a1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_a2"
+            android:text="@string/a2" >
+        </Button>
+        <Button
+            android:id="@+id/btn_c1"
+            android:text="@string/c1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_e1"
+            android:text="@string/e1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_e2"
+            android:text="@string/e2" >
+        </Button>        
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:id="@+id/btn_e3"
+            android:text="@string/e3" >
+        </Button>
+        <Button
+            android:id="@+id/btn_e4"
+            android:text="@string/e4" >
+        </Button>
+        <Button
+            android:id="@+id/btn_i1"
+            android:text="@string/i1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_i2"
+            android:text="@string/i2" >
+        </Button>
+        <Button
+            android:id="@+id/btn_o1"
+            android:text="@string/o1" >
+        </Button>
+    </TableRow>
+    <TableRow>
+        <Button
+            android:id="@+id/btn_o2"
+            android:text="@string/o2" >
+        </Button>
+        <Button
+            android:id="@+id/btn_u1"
+            android:text="@string/u1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_u2"
+            android:text="@string/u2" >
+        </Button>
+        <Button
+            android:id="@+id/btn_A1"
+            android:text="@string/A1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_A2"
+            android:text="@string/A2" >
+        </Button>
+    </TableRow>
+    <TableRow>
+        <Button
+            android:id="@+id/btn_C1"
+            android:text="@string/C1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_E1"
+            android:text="@string/E1" >
+        </Button>
+        <Button
+            android:id="@+id/btn_E2"
+            android:text="@string/E2" >
+        </Button>
+        <Button
+            android:id="@+id/btn_E3"
+            android:text="@string/E3" >
+        </Button>
+        <Button
+            android:id="@+id/btn_I1"
+            android:text="@string/I1" >
+        </Button>
+    </TableRow>
+</TableLayout>

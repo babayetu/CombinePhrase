@@ -25,6 +25,7 @@
         
         <activity android:name=".GameActivity" android:label="@string/game_activity_name" android:screenOrientation="landscape"></activity>        
         <activity android:name=".ManagePhraseActivity" android:label="@string/addphrase_activity_name" android:screenOrientation="portrait"></activity>
+        <activity android:name=".PhraseInputActivity" android:label="@string/phrase_input_activity_name" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

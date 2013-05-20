@@ -1,5 +1,9 @@
 package com.karlliu.combinephrase;
 
+/**
+ *    Obseleted
+ *    Use PhraseInputActivity instead
+ */
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -371,7 +375,7 @@ public class ManagePhraseActivity extends Activity implements OnClickListener{
 
     	} else {
     		Toast.makeText(this, getResources().getString(R.string.sdNotReady) , Toast.LENGTH_SHORT).show();
-    	}    	
+    	}
     }
     
     private void setCursorPos(EditText et) {
